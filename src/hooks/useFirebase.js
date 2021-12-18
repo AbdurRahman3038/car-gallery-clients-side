@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, getIdToken, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import initializeAuth from '../firebase/firebase.initialize';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+
 
 initializeAuth()
 const useFirebase = () => {
@@ -9,7 +10,7 @@ const useFirebase = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [authError, setAuthError] = useState('')
     const [admin, setAdmin] = useState(false)
-    const [token, setToken] = useState('')
+    // const [token, setToken] = useState('')
 
     const googleProvider = new GoogleAuthProvider();
     const auth = getAuth()
@@ -80,11 +81,11 @@ const useFirebase = () => {
     }
 
     // check admin 
-    useEffect(()=>{
+    useEffect(() => {
         fetch(`https://powerful-bastion-59588.herokuapp.com/users/${user.email}`)
-        .then(res=>res.json())
-        .then(data=>setAdmin(data.admin))
-    },[user.email])
+            .then(res => res.json())
+            .then(data => setAdmin(data.admin))
+    }, [user.email])
 
     // SAVE USER DB
     const saveUser = (email, displayName, method) => {
@@ -97,8 +98,6 @@ const useFirebase = () => {
             body: JSON.stringify(user)
         })
             .then()
-
-
     }
 
 
@@ -118,23 +117,38 @@ const useFirebase = () => {
             }).finally(() => setIsLoading(false));
     }
 
-    // observer user state 
+
+    // observer user state
     useEffect(() => {
         const unsubscribed = onAuthStateChanged(auth, (user) => {
             if (user) {
-                getIdToken(user)
-                    .then(idToken => {
-                        setToken(idToken)
-                    })
-                const uid = user.uid;
-                setUser(user)
+                setUser(user);
             } else {
                 setUser({})
             }
-            setIsLoading(false)
+            setIsLoading(false);
         });
-        return () => unsubscribed
-    }, [])
+        return () => unsubscribed;
+    }, [auth])
+
+
+    // observer user state 
+    // useEffect(() => {
+    //     const unsubscribed = onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             getIdToken(user)
+    //                 .then(idToken => {
+    //                     setToken(idToken)
+    //                 })
+    //             const uid = user.uid;
+    //             setUser(user)
+    //         } else {
+    //             setUser({})
+    //         }
+    //         setIsLoading(false)
+    //     });
+    //     return () => unsubscribed
+    // }, [])
 
 
 
@@ -144,7 +158,6 @@ const useFirebase = () => {
         user,
         admin,
         isLoading,
-        token,
         registerUser,
         logOut,
         loginUser,

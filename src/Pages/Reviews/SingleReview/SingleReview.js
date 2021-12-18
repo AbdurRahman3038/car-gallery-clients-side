@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
 import Icon from 'react-icons-kit';
-import { RatingView } from 'react-simple-star-rating';
+import { Rating } from 'react-simple-star-rating';
 // import {money} from 'react-icons-kit/fa/money'
 
 const SingleReview = (props) => {
@@ -21,7 +21,7 @@ const SingleReview = (props) => {
           
           <Card.Text className="texts-colors d-flex justify-content-around text-start">
           <div>
-          <RatingView ratingValue={rating} /* RatingView Props */ />
+          <Rating ratingValue={rating} /* RatingView Props */ />
 
           </div>
         
